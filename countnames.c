@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,6 +10,16 @@
 *   NOTE: A history of this code is available on a private github repository.
 *   This repository can be made available upon request.
 */
+
+/*
+ *
+ * TODO:
+ *
+ * Add threading support to program.
+ * Analyze if existing functions are thread-safe(if not, find alternatives)
+ *  
+ *
+*/ 
 int check_in(char *a, char *b[]) {    // Checks if a string is in the file.
                 int rval = -1;
                 for (int i = 0; b[i] != 0; i++) {
@@ -54,10 +65,11 @@ void clnup(char *a1[], char *a2[]) {    // Frees allocated memory.
 int main(int argc, char *argv[])  /* int argc = argument count
                                    * char *argv[] = string array containing the actual arguments passed.*/
 {
-                if (argc == 1) {
+				if (argc == 1) {
                     puts("No file provided, exiting."); // This informs the user that there is no file.
                     return 0;
                 }
+				pid_t pid;		
                 FILE *f = fopen(argv[1], "r");
                 if (f == NULL) {
                     fputs("error: cannot open file\n\0", stderr);   // This prints to stderr an error and exits the program.
