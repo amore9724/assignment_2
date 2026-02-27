@@ -10,13 +10,15 @@ void err_sys(const char* c) {
 	perror(c);
 	exit(1);
 }
+
 void err_ret(const char* c, ...) {
 	va_list var_arg;
 	va_start(var_arg, c);
 	fprintf(stderr, c, var_arg);
 	va_end(var_arg);
 }
-int main(void)
+
+int main(int argc, char* argv[])
 {
 	char	buf[MAXLINE];
 	pid_t	pid;
@@ -30,7 +32,7 @@ int main(void)
 		if ((pid = fork()) < 0) {
 			err_sys("fork error");
 		} else if (pid == 0) {		/* child */
-			execlp(buf, buf, (char *)0);
+			execvp(, buf, (char *)0);
 			err_ret("couldn't execute: %s", buf);
 			exit(127);
 		}

@@ -17,13 +17,13 @@
  *
  * Add threading support to program.
  * Analyze if existing functions are thread-safe(if not, find alternatives)
- *  
  *
-*/ 
+ *
+*/
 int check_in(char *a, char *b[]) {    // Checks if a string is in the file.
                 int rval = -1;
                 for (int i = 0; b[i] != 0; i++) {
-                                if (strcmp(b[i], a) == 0) { 
+                                if (strcmp(b[i], a) == 0) {
                                                 rval = i;
                                                 break;
                                 }
@@ -34,7 +34,7 @@ int check_in(char *a, char *b[]) {    // Checks if a string is in the file.
 
 void ncount(char *arr[], char *nused[], int count[]) {  // Counts the number of times a string occurs in a file.
                 int j = 0, k;
-                for (int i = 0; arr[i] != 0; i++) { 
+                for (int i = 0; arr[i] != 0; i++) {
                                 k = check_in(arr[i], nused);
                                 if (k == -1) {
                                                 nused[j] = strdup(arr[i]); /* This allocates memory on the heap to store the string
@@ -65,41 +65,34 @@ void clnup(char *a1[], char *a2[]) {    // Frees allocated memory.
 int main(int argc, char *argv[])  /* int argc = argument count
                                    * char *argv[] = string array containing the actual arguments passed.*/
 {
-                pid_t pid;
+                // pid_t pid; // Uncomment when necessary.
                 if (argc == 1) {
                     puts("No file provided, exiting."); // This informs the user that there is no file.
                     return 0;
                 }
-
-                if (pid != 0) {
-                    for (int i = 0; i < argc; i++) {
-                        fork();
-                    }
-                } else {
-                    FILE *f = fopen(argv[1], "r");
-                    if (f == NULL) {
-                        fputs("error: cannot open file\n\0", stderr);   // This prints to stderr an error and exits the program.
-                        return 1;
-                    }
-                    int i = 0, lnum = 0;
-                    char namebuf[MLINE] = {0};  // This buffer temporarily stores a line in the file.
-                    char *names[MSIZE] = {0};   // This stores all the names and their occurences in the file.
-                    while (fgets(namebuf, MLINE, f)) {
+                FILE *f = fopen(argv[1], "r");
+                if (f == NULL) {
+                    fputs("error: cannot open file\n\0", stderr);   // This prints to stderr an error and exits the program.
+                    return 1;
+                }
+                int i = 0, lnum = 0;
+                char namebuf[MLINE] = {0};  // This buffer temporarily stores a line in the file.
+                char *names[MSIZE] = {0};   // This stores all the names and their occurences in the file.
+                while (fgets(namebuf, MLINE, f)) {
                         lnum++;
                         char *tok = strtok(namebuf, "\n");      // Uses "\n" character to tokenize string.
                         if (tok == NULL) {
-                            fprintf(stderr, "Warning: Line %d is empty.\n", lnum);  // Prints warning if token is null and skips.
+                            fprintf(stdout, "Warning: Line %d is empty.\n", lnum);  // Prints warning if token is null and skips. (TEMPORARILY STDOUT)
                             continue;
                         }
                         names[i++] = strdup(tok);   /* This allocates memory on the heap to store the string,
                                                         which needs to be freed later. */
-                    }
-                    fclose(f);
-                    int count[MNAME] = {0};      // Contains the number of times a name occurs in the file.
-                    char *nused[MNAME] = {0};    // Contains the number of unique names used in the file.
-                    ncount(names, nused, count);
-                    nprinter(nused, count);
-                    clnup(names, nused);        // This will free the allocated memory.
                 }
+                fclose(f);
+                int count[MNAME] = {0};      // Contains the number of times a name occurs in the file.
+                char *nused[MNAME] = {0};    // Contains the number of unique names used in the file.
+                ncount(names, nused, count);
+                nprinter(nused, count);
+                clnup(names, nused);        // This will free the allocated memory.
                 return 0;
 }
