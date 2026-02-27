@@ -4,7 +4,9 @@
 #include <string.h>
 #include <stdarg.h>
 #include <sys/wait.h>
+
 #define MAXLINE 4096
+#define PROGRAMNAME "countnames"
 
 void err_sys(const char* c) {
 	perror(c);
@@ -32,9 +34,11 @@ int main(int argc, char* argv[])
 		if ((pid = fork()) < 0) {
 			err_sys("fork error");
 		} else if (pid == 0) {		/* child */
-			execvp(, buf, (char *)0);
-			err_ret("couldn't execute: %s", buf);
-			exit(127);
+			// int num = getppid() - getpid();  /* Meant to subtract child pid from parent pid to get exact process number,
+												/*	Uncomment if necessary */
+			execvp(PROGRAMNAME, argv);
+			/*err_ret("couldn't execute: %s", buf); // Meant to print an error if previous instruction failed, but I think it will print an error anyway.
+			exit(127);*/							// Uncomment if necessary.
 		}
 
 		/* parent */
