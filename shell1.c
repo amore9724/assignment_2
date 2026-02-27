@@ -11,10 +11,10 @@ void err_sys(const char* c) {
 	exit(1);
 }
 void err_ret(const char* c, ...) {
-	va_list ap;
-	va_start(ap, c);
-	fprintf(stderr, c, ap);
-	va_end(ap);
+	va_list var_arg;
+	va_start(var_arg, c);
+	fprintf(stderr, c, var_arg);
+	va_end(var_arg);
 }
 int main(void)
 {
