@@ -10,6 +10,6 @@ Otherwise, just run `cc shell1.c -o shell1 -Wall -Werror`.
 # Running the program
 
 Run ```./shell1``` and then run ```"./countnames <insert text file arguments here>"``` inside shell1.
-The output should be in multiple ".out" files in the same folder.
+The output should be in multiple ".out" and ".err" files in the same folder.
 
 # Test Case information

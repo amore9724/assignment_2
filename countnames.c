@@ -58,8 +58,8 @@ int main(int argc, char *argv[])  /* int argc = argument count
 
 {
 
-                // Create a PID.out for this child process
-                // and then set stdout to this PID.out
+                /* Create a PID.out for this child process
+                and then set stdout to this PID.out */
                 char filename[64];
                 sprintf(filename, "%d.out", getpid());
 
@@ -68,9 +68,18 @@ int main(int argc, char *argv[])  /* int argc = argument count
                     return 1;
                 }
 
+                /* Create a PID.err for this child process
+                and then set stderr to this PID.err */
+                char fileerr[64];
+                sprintf(fileerr, "%d.err", getpid());
+
+                if (freopen(fileerr, "w", stderr) == NULL) {
+                    perror("freopen failed");
+                    return 1;
+                }
 
 
-                // pid_t pid; // Uncomment when necessary.
+
                 if (argc == 1) {
                     puts("No file provided, exiting."); // This informs the user that there is no file.
                     return 0;
@@ -79,8 +88,7 @@ int main(int argc, char *argv[])  /* int argc = argument count
 
                 FILE *f = fopen(argv[1], "r");
                 if (f == NULL) {
-                    fprintf(stderr, "Error: Child %d could not open file %s\n", getpid(), argv[1]);
-                    fputs("error: cannot open file\n\0", stderr);   // This prints to stderr an error and exits the program.
+                    fprintf(stderr, "Error: Child %d could not open file %s and is exiting.\n", getpid(), argv[1]);
                     return 1;
                 }
 
@@ -92,7 +100,7 @@ int main(int argc, char *argv[])  /* int argc = argument count
                         lnum++;
                         char *tok = strtok(namebuf, "\n");      // Uses "\n" character to tokenize string.
                         if (tok == NULL) {
-                            fprintf(stdout, "Warning: Line %d is empty.\n", lnum);  // Prints warning if token is null and skips. (TEMPORARILY STDOUT)
+                            fprintf(stderr, "Warning: Line %d in Child %d is empty.\n", lnum, getpid());
                             continue;
                         }
                         names[i++] = strdup(tok);   /* This allocates memory on the heap to store the string,
@@ -106,8 +114,8 @@ int main(int argc, char *argv[])  /* int argc = argument count
                 char *nused[MNAME] = {0};    // Contains the number of unique names used in the file.
                 ncount(names, nused, count);
                 nprinter(nused, count);
-
                 fclose(stdout);
+                fclose(stderr);
                 clnup(names, nused);        // This will free the allocated memory.
                 return 0;
 }
