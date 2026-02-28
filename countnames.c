@@ -48,7 +48,7 @@ void ncount(char *arr[], char *nused[], int count[]) {  // Counts the number of 
 
 void nprinter(char *nused[], int count[]) {     // Prints a string and the amount of times it occurs.
                 for (int i = 0; nused[i] != 0; i++) {
-                                printf("%s: %d\n", nused[i], count[i]);
+                                printf( "%s: %d\n", nused[i], count[i]);
                 }
 }
 
@@ -64,17 +64,36 @@ void clnup(char *a1[], char *a2[]) {    // Frees allocated memory.
 
 int main(int argc, char *argv[])  /* int argc = argument count
                                    * char *argv[] = string array containing the actual arguments passed.*/
+
 {
+
+                // Create a PID.out for this child process
+                // and then set stdout to this PID.out
+                char filename[64];
+                sprintf(filename, "%d.out", getpid());
+
+                if (freopen(filename, "w", stdout) == NULL) {
+                    perror("freopen failed");
+                    return 1;
+                }
+
+
+
                 // pid_t pid; // Uncomment when necessary.
                 if (argc == 1) {
                     puts("No file provided, exiting."); // This informs the user that there is no file.
                     return 0;
                 }
+
+
                 FILE *f = fopen(argv[1], "r");
                 if (f == NULL) {
+                    fprintf(stderr, "Error: Child %d could not open file %s\n", getpid(), argv[1]);
                     fputs("error: cannot open file\n\0", stderr);   // This prints to stderr an error and exits the program.
                     return 1;
                 }
+
+
                 int i = 0, lnum = 0;
                 char namebuf[MLINE] = {0};  // This buffer temporarily stores a line in the file.
                 char *names[MSIZE] = {0};   // This stores all the names and their occurences in the file.
@@ -88,11 +107,16 @@ int main(int argc, char *argv[])  /* int argc = argument count
                         names[i++] = strdup(tok);   /* This allocates memory on the heap to store the string,
                                                         which needs to be freed later. */
                 }
+
+
                 fclose(f);
+                
                 int count[MNAME] = {0};      // Contains the number of times a name occurs in the file.
                 char *nused[MNAME] = {0};    // Contains the number of unique names used in the file.
                 ncount(names, nused, count);
                 nprinter(nused, count);
+
+                fclose(stdout);
                 clnup(names, nused);        // This will free the allocated memory.
                 return 0;
 }
