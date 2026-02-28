@@ -11,15 +11,6 @@
 *   This repository can be made available upon request.
 */
 
-/*
- *
- * TODO:
- *
- * Add threading support to program.
- * Analyze if existing functions are thread-safe(if not, find alternatives)
- *
- *
-*/
 int check_in(char *a, char *b[]) {    // Checks if a string is in the file.
                 int rval = -1;
                 for (int i = 0; b[i] != 0; i++) {
