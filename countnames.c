@@ -61,7 +61,7 @@ int main(int argc, char *argv[])  /* int argc = argument count
                 /* Create a PID.out for this child process
                 and then set stdout to this PID.out */
                 char filename[64];
-                sprintf(filename, "test/%d.out", getpid());
+                sprintf(filename, "output/%d.out", getpid());
 
                 if (freopen(filename, "w", stdout) == NULL) {
                     perror("freopen failed");
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])  /* int argc = argument count
                 /* Create a PID.err for this child process
                 and then set stderr to this PID.err */
                 char fileerr[64];
-                sprintf(fileerr, "test/%d.err", getpid());
+                sprintf(fileerr, "output/%d.err", getpid());
 
                 if (freopen(fileerr, "w", stderr) == NULL) {
                     perror("freopen failed");
