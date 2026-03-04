@@ -2,23 +2,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <stdarg.h>
 #include <sys/wait.h>
+
+/*
+*   NOTE: A history of this code is available on a private GitHub repository.
+*   This repository can be made available upon request.
+*/
 
 #define MAXLINE 4096
 #define PROGRAMNAME "countnames"
 
-void err_sys(const char* c) {
-	perror(c);
-	exit(1);
-}
-
-void err_ret(const char* c, ...) {
-	va_list var_arg;
-	va_start(var_arg, c);
-	fprintf(stderr, c, var_arg);
-	va_end(var_arg);
-}
 
 int main(int argc, char* argv[])
 {
@@ -65,8 +58,8 @@ int main(int argc, char* argv[])
 
 		
 
-		/* parent wait untill all children are finished*/
-		while (wait(NULL) > 0);
+		/* parent wait until all children are finished*/
+		while (wait(NULL) > 0) {}
 		printf("%% ");
 	}
 	exit(0);
